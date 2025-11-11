@@ -8,7 +8,7 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    isManager BOOLEAN DEFAULT FALSE
+    is_manager BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE books (
@@ -17,7 +17,7 @@ CREATE TABLE books (
     author VARCHAR(255) NOT NULL,
     rent_price DECIMAL(8,2) NOT NULL,
     buy_price DECIMAL(8,2) NOT NULL,
-    isRented BOOLEAN DEFAULT FALSE
+    is_rented BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE orders (

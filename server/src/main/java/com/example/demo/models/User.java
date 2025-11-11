@@ -11,8 +11,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false, unique = true)
     private String email;
-    private String password_hash;
-    private boolean isManager;
+
+    @Column(nullable = false)
+    private String passwordHash;
+
+    private boolean isManager = false;
 }

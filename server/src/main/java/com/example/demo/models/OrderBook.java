@@ -5,21 +5,22 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "order_books")
 @Data
-public class Order_Books {
+public class OrderBook {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
-    private Orders order;
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
-    private Books book;
+    private Book book;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "purchase_or_rental", nullable = false)
+    @Column(nullable = false)
     private PurchaseType purchaseOrRental;
 }
