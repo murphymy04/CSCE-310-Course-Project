@@ -24,6 +24,7 @@ public class AuthController {
         if (userService.findByUsername(user.getUsername()) != null) {
             return ResponseEntity.badRequest().body("Username already exists");
         }
+        System.out.println(user.isManager());
         User registeredUser = userService.registerUser(user);
         return ResponseEntity.ok(Map.of("message", "User registered", "username", registeredUser.getUsername()));
     }
@@ -35,6 +36,10 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
         String token = jwtService.generateToken(user.getUsername());
-        return ResponseEntity.ok(Map.of("token", token));
+        return ResponseEntity.ok(
+            Map.of(
+                "token", token,
+                "isManager", savedUser.isManager()
+        ));
     }
 }
