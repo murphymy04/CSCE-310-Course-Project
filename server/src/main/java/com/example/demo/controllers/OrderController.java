@@ -19,19 +19,19 @@ public class OrderController {
 
     @PostMapping()
     public ResponseEntity<?> orderBooks(@AuthenticationPrincipal User user, @RequestBody BookOrderRequest request) {
-    try {
-        Map<Integer, Integer> orders = request.getOrders();
+        try {
+            Map<Integer, Integer> orders = request.getOrders();
 
-        BookOrderResponse response = orderService.placeOrder(orders, user);
+            BookOrderResponse response = orderService.placeOrder(orders, user);
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
 
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
 
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred while placing the order.");
-    }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred while placing the order.");
+        }
     }
 }
