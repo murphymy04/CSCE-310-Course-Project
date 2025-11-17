@@ -1,44 +1,51 @@
 package com.example.ui;
 
-import com.google.gson.Gson;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.concurrent.Task;
 import com.example.ApiClient;
 import com.example.types.RegisterRequest;
+import com.google.gson.Gson;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 public class RegisterController {
 
+    @FXML private TextField usernameField;
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
-    @FXML private TextField nameField;
-    @FXML private Label messageLabel;
+    @FXML private CheckBox managerCheckBox;
     @FXML private Label errorLabel;
 
     private final Gson gson = new Gson();
 
     @FXML
     private void register() {
-        String json = gson.toJson(new RegisterRequest(
-                nameField.getText(),
-                emailField.getText(),
-                passwordField.getText()
-        ));
+        String username = usernameField.getText();
+        String email = emailField.getText();
+        String password = passwordField.getText();
+        boolean isManager = managerCheckBox.isSelected();
+
+        RegisterRequest request = new RegisterRequest(username, email, password, isManager);
 
         Task<String> task = ApiClient.postJson(
                 "http://localhost:8080/api/auth/register",
-                json
+                gson.toJson(request)
         );
 
         task.setOnSucceeded(e -> {
-            messageLabel.setText("Registration successful! Return to login.");
+            String body = task.getValue();
+
+            if (body == null) {
+                errorLabel.setText("Registration failed.");
+                return;
+            }
+
+            goToLogin();
         });
 
         task.setOnFailed(e -> {
-            messageLabel.setText("Registration failed.");
+            errorLabel.setText(task.getMessage());
         });
 
         new Thread(task).start();
@@ -47,19 +54,10 @@ public class RegisterController {
     @FXML
     private void goToLogin() {
         try {
-            Stage stage = (Stage) emailField.getScene().getWindow();
-
-            FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/ui/login.fxml")
-            );
-
-            Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
-            stage.show();
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(com.example.MainApp.loadFXML("login.fxml")));
         } catch (Exception ex) {
             ex.printStackTrace();
-            errorLabel.setText("Could not load login page.");
         }
     }
 }
-

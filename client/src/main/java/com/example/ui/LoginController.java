@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.concurrent.Task;
 import javafx.stage.Stage;
@@ -41,7 +40,7 @@ public class LoginController {
             ApiResponse<AuthResponse> response = gson.fromJson(body, type);
 
             if (!response.isSuccess()) {
-                errorLabel.setText(response.getMessage());
+                errorLabel.setText("Invalid username or password");
                 return;
             }
 
@@ -76,17 +75,9 @@ public class LoginController {
     private void goToRegister() {
         try {
             Stage stage = (Stage) usernameField.getScene().getWindow();
-
-            FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/ui/register.fxml")
-            );
-
-            Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
-            stage.show();
+            stage.setScene(new Scene(com.example.MainApp.loadFXML("register.fxml")));
         } catch (Exception ex) {
             ex.printStackTrace();
-            errorLabel.setText("Could not load register page.");
         }
     }
 }

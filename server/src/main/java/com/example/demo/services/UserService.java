@@ -21,11 +21,11 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Username not found"));
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Email not found"));
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public boolean checkPassword(String raw, String encoded) {
