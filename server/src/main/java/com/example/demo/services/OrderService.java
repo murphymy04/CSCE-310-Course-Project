@@ -20,6 +20,9 @@ public class OrderService {
     private BookService bookService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
@@ -61,7 +64,9 @@ public class OrderService {
         order.setTotalPrice(totalPrice);
         order = orderRepository.save(order);
         buildAndSaveOrderBooks(books, orderItems, order);
-        return new BookOrderResponse(order.getId(), totalPrice, orderItems);
+        BookOrderResponse bookOrder = new BookOrderResponse(order.getId(), totalPrice, orderItems);
+        emailService.sendHtmlEmailAsync(user.getEmail(), "Order #" + order.getId() + " Confirmation", bookOrder);
+        return bookOrder;
     }
 
     private List<OrderBook> buildAndSaveOrderBooks(List<Book> books, List<OrderItem> orderItems, Order order) {
