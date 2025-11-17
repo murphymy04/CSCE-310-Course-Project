@@ -13,6 +13,7 @@ import com.example.demo.repositories.OrderBookRepository;
 import com.example.demo.types.ManageOrder;
 import com.example.demo.types.OrderItem;
 import com.example.demo.types.PurchaseType;
+import com.example.demo.types.OrderUpdateRequest;
 
 @Service
 public class ManageOrderService {
@@ -47,10 +48,12 @@ public class ManageOrderService {
         return manageOrders;
     }
 
-    public void updateOrder(int orderId, boolean status) {
-        Order order = orderRepository.findById(orderId)
-                        .orElseThrow(() -> new RuntimeException("Order with ID " + orderId + " not found"));
-        order.setPaid(status);
-        orderRepository.save(order);
+    public void updateOrders(List<OrderUpdateRequest> orders) {
+        for (OrderUpdateRequest order : orders) {
+            Order newOrder = orderRepository.findById(order.getOrderId())
+                        .orElseThrow(() -> new RuntimeException("Order with ID " + order.getOrderId() + " not found"));
+        newOrder.setPaid(order.isPaid());
+        orderRepository.save(newOrder);
+        }
     }
 }
