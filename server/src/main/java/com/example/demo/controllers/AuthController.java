@@ -21,10 +21,9 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
-        if (userService.findByUsername(user.getUsername()) != null) {
-            return ResponseEntity.badRequest().body("Username already exists");
+        if (((userService.findByUsername(user.getUsername())) != null) || (userService.findByEmail(user.getEmail()) != null)) {
+            return ResponseEntity.badRequest().body("Username or email already registered");
         }
-        System.out.println(user.isManager());
         User registeredUser = userService.registerUser(user);
         return ResponseEntity.ok(Map.of("message", "User registered", "username", registeredUser.getUsername()));
     }

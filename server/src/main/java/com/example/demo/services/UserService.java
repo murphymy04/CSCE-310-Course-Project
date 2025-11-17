@@ -24,6 +24,10 @@ public class UserService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
+    }
+
     public boolean checkPassword(String raw, String encoded) {
         return passwordEncoder.matches(raw, encoded);
     }
