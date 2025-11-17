@@ -3,8 +3,11 @@ package com.example.demo.controllers;
 import com.example.demo.models.User;
 import com.example.demo.services.JwtService;
 import com.example.demo.services.UserService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.types.ApiResponse;
 
 import java.util.Map;
 
@@ -20,25 +23,50 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody User user) {
         if (((userService.findByUsername(user.getUsername())) != null) || (userService.findByEmail(user.getEmail()) != null)) {
-            return ResponseEntity.badRequest().body("Username or email already registered");
+            return ResponseEntity.badRequest().body(
+                new ApiResponse<>(false, "Username or email already registered", null)
+            );
         }
-        User registeredUser = userService.registerUser(user);
-        return ResponseEntity.ok(Map.of("message", "User registered", "username", registeredUser.getUsername()));
+        try {
+            User registeredUser = userService.registerUser(user);
+            return ResponseEntity.ok(
+                new ApiResponse<>(true, "Registration successful", registeredUser.getUsername())
+            );
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(401).body(
+                new ApiResponse<>(false, e.getMessage(), null)
+            );
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        User savedUser = userService.findByUsername(user.getUsername());
-        if (user == null || !userService.checkPassword(user.getPasswordHash(), savedUser.getPasswordHash())) {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
-        String token = jwtService.generateToken(user.getUsername());
-        return ResponseEntity.ok(
-            Map.of(
+    public ResponseEntity<ApiResponse<Map<String, Object>>> login(@RequestBody User user) {
+        try {
+            User savedUser = userService.findByUsername(user.getUsername());
+            if (user == null || !userService.checkPassword(user.getPasswordHash(), savedUser.getPasswordHash())) {
+                return ResponseEntity.status(401).body(
+                    new ApiResponse<>(false, "Invalid credentials", null)
+                );
+            }
+            String token = jwtService.generateToken(user.getUsername());
+
+            Map<String, Object> data = Map.of(
                 "token", token,
                 "isManager", savedUser.isManager()
-        ));
+            );
+
+            return ResponseEntity.ok(
+                new ApiResponse<>(true, "Login successful", data)
+            );
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(401).body(
+                new ApiResponse<>(false, e.getMessage(), null)
+            );
+        }
+
     }
 }

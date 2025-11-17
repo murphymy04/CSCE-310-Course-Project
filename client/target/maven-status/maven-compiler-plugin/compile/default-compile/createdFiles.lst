@@ -1,1 +1,11 @@
-main\java\com\example\MainApp.class
+com\example\ApiClient$1.class
+com\example\ApiClient.class
+com\example\MainApp.class
+com\example\types\LoginRequest.class
+com\example\ui\RegisterController.class
+com\example\types\AuthResponse.class
+com\example\ui\UserDashboard.class
+com\example\types\RegisterRequest.class
+com\example\ui\LoginController.class
+com\example\UserSession.class
+com\example\ui\ManagerDashboard.class

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.ui.RegisterController"
+      alignment="CENTER"
+      spacing="18"
+      prefWidth="400"
+      prefHeight="520"
+      style="-fx-padding: 30;">
+    
+    <children>
+
+        <Text text="Create Account"
+              style="-fx-font-size: 28px; -fx-font-weight: bold;" />
+
+        <VBox spacing="10" alignment="CENTER_LEFT" prefWidth="300">
+
+            <Label text="Full Name:" />
+            <TextField fx:id="nameField" promptText="Enter full name" />
+
+            <Label text="Email:" />
+            <TextField fx:id="emailField" promptText="Enter email" />
+
+            <Label text="Password:" />
+            <PasswordField fx:id="passwordField" promptText="Enter password" />
+
+        </VBox>
+
+        <Button text="Register"
+                prefWidth="200"
+                onAction="#register"
+                style="-fx-font-size: 16px;" />
+
+        <Label fx:id="messageLabel" textFill="green" />
+
+        <Hyperlink text="Already have an account? Login"
+                   onAction="#goToLogin" />
+
+    </children>
+</VBox>
