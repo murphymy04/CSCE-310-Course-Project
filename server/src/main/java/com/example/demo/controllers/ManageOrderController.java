@@ -15,7 +15,7 @@ public class ManageOrderController {
     @Autowired
     private ManageOrderService manageOrderService;
     
-    @GetMapping("fetch")
+    @GetMapping("/fetch")
     public ResponseEntity<?> viewOrders() {
         try {
             List<ManageOrder> response = manageOrderService.getOrders();
@@ -27,7 +27,7 @@ public class ManageOrderController {
         }
     }
 
-    @PostMapping("update")
+    @PostMapping("/update")
     public ResponseEntity<?> updatePaymentStatus(@RequestBody List<OrderUpdateRequest> orders) {
         try {
             manageOrderService.updateOrders(orders);

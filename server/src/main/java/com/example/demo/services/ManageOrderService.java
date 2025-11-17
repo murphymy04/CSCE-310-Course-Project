@@ -52,8 +52,8 @@ public class ManageOrderService {
         for (OrderUpdateRequest order : orders) {
             Order newOrder = orderRepository.findById(order.getOrderId())
                         .orElseThrow(() -> new RuntimeException("Order with ID " + order.getOrderId() + " not found"));
-        newOrder.setPaid(order.isPaid());
-        orderRepository.save(newOrder);
+            newOrder.setPaid(order.isPaid());
+            orderRepository.save(newOrder);
         }
     }
 }
