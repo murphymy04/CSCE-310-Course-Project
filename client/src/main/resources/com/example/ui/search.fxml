@@ -23,6 +23,7 @@
                 <Button fx:id="searchButton"
                         text="Search"
                         prefWidth="120"/>
+                <Button text="Open Cart" onAction="#openCart" />
             </children>
         </HBox>
     </top>

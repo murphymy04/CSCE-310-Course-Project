@@ -9,7 +9,12 @@ import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -39,6 +44,18 @@ public class SearchController {
         rentedColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("rented"));
 
         searchButton.setOnAction(e -> searchBooks());
+        resultsTable.setRowFactory(tv -> {
+            TableRow<Book> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    Book selected = row.getItem();
+                    openBookDetail(selected);
+                }
+            });
+
+            return row;
+        });
     }
 
     private void searchBooks() {
@@ -73,6 +90,45 @@ public class SearchController {
         });
 
         new Thread(task).start();
+    }
+
+    private void openBookDetail(Book book) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/example/ui/book_modal.fxml")
+            );
+
+            Parent root = loader.load();
+
+            BookModalController controller = loader.getController();
+            controller.setBook(book);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Book Options");
+            stage.showAndWait(); // modal
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            showAlert("Unable to open book details.");
+        }
+    }
+
+    @FXML
+    private void openCart() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/ui/cart-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Shopping Cart");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void showAlert(String msg) {

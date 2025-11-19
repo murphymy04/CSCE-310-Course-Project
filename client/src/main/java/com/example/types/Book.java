@@ -8,7 +8,7 @@ public class Book {
     private String author;
     private BigDecimal rentPrice;
     private BigDecimal buyPrice;
-    private boolean isRented;
+    private boolean rented;
 
     public int getId() {
         return id;
@@ -31,6 +31,6 @@ public class Book {
     }
 
     public boolean isRented() {
-        return isRented;
+        return rented;
     }
 }
