@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import com.example.demo.models.Book;
 import com.example.demo.services.BookService;
+import com.example.demo.types.ApiResponse;
 
 @RestController
 @RequestMapping("/api/books")
@@ -14,8 +15,10 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("/search")
-    public ResponseEntity<List<Book>> search(@RequestParam String keyword) {
+    public ResponseEntity<ApiResponse<List<Book>>> search(@RequestParam String keyword) {
         List<Book> results = bookService.search(keyword);
-        return ResponseEntity.ok(results);
+        return ResponseEntity.ok(
+            new ApiResponse<>(true, "Search successful.", results)
+        );
     }
 }

@@ -64,7 +64,7 @@ public class LoginController {
             if (isManager) {
                 stage.setScene(new Scene(new ManagerDashboard()));
             } else {
-                stage.setScene(new Scene(new UserDashboard()));
+                stage.setScene(new Scene(com.example.MainApp.loadFXML("search.fxml")));
             }
         } catch (Exception ex) {
             errorLabel.setText("Navigation error");

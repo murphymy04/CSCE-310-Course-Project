@@ -12,7 +12,7 @@ public class MainApp extends Application {
     public void start(Stage stage) throws Exception {
         // Load login page first
         Parent root = loadFXML("login.fxml");
-        stage.setTitle("Login");
+        stage.setTitle("Bookstore");
         stage.setScene(new Scene(root));
         stage.show();
     }
