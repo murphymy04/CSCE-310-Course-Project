@@ -66,30 +66,36 @@ public class SearchController {
             return;
         }
 
-        String url = "http://localhost:8080/api/books/search?keyword=" + keyword;
+        try {
+            String encoded = java.net.URLEncoder.encode(keyword, java.nio.charset.StandardCharsets.UTF_8);
+            String url = "http://localhost:8080/api/books/search?keyword=" + encoded;
 
-        Task<String> task = ApiClient.get(url);
+                    Task<String> task = ApiClient.get(url);
 
-        task.setOnSucceeded(e -> {
-            String body = task.getValue();
+            task.setOnSucceeded(e -> {
+                String body = task.getValue();
 
-            Type type = new TypeToken<ApiResponse<List<Book>>>() {}.getType();
-            ApiResponse<List<Book>> response = gson.fromJson(body, type);
+                Type type = new TypeToken<ApiResponse<List<Book>>>() {}.getType();
+                ApiResponse<List<Book>> response = gson.fromJson(body, type);
 
-            if (!response.isSuccess()) {
-                showAlert("Search failed: " + response.getMessage());
-                return;
-            }
+                if (!response.isSuccess()) {
+                    showAlert("Search failed: " + response.getMessage());
+                    return;
+                }
 
-            List<Book> books = response.getData();
-            resultsTable.setItems(FXCollections.observableList(books));
-        });
+                List<Book> books = response.getData();
+                resultsTable.setItems(FXCollections.observableList(books));
+            });
 
-        task.setOnFailed(e -> {
-            showAlert("Request error: " + task.getException().getMessage());
-        });
+            task.setOnFailed(e -> {
+                showAlert("Request error: " + task.getException().getMessage());
+            });
 
-        new Thread(task).start();
+            new Thread(task).start();
+        }
+        catch (Exception e) {
+            showAlert("Encoding error: " + e.getMessage());
+        }
     }
 
     private void openBookDetail(Book book) {

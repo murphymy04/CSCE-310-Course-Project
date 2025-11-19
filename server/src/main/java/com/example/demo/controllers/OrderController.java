@@ -10,6 +10,7 @@ import com.example.demo.models.User;
 import com.example.demo.services.OrderService;
 import com.example.demo.types.BookOrderRequest;
 import com.example.demo.types.BookOrderResponse;
+import com.example.demo.types.ApiResponse;
 
 @RestController
 @RequestMapping("/api/order")
@@ -18,20 +19,26 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping()
-    public ResponseEntity<?> orderBooks(@AuthenticationPrincipal User user, @RequestBody BookOrderRequest request) {
+    public ResponseEntity<ApiResponse<?>> orderBooks(@AuthenticationPrincipal User user, @RequestBody BookOrderRequest request) {
         try {
             Map<Integer, Integer> orders = request.getOrders();
 
-            BookOrderResponse response = orderService.placeOrder(orders, user);
+            BookOrderResponse data = orderService.placeOrder(orders, user);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(
+                new ApiResponse<>(true, "Order placed successfuly.", data)
+            );
 
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(
+                new ApiResponse<>(false, e.getMessage(), null)
+            );
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred while placing the order.");
+                    .body(
+                        new ApiResponse<>(false, "An unexpected error occurred while placing the order.", null)
+                    );
         }
     }
 }

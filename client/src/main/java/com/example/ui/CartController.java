@@ -2,14 +2,19 @@ package com.example.ui;
 
 import com.example.ApiClient;
 import com.example.CartService;
+import com.example.types.ApiResponse;
 import com.example.types.CartItem;
+import com.example.types.OrderResponse;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +72,6 @@ public class CartController {
         wrapper.put("orders", orders);
 
         String json = gson.toJson(wrapper);
-        System.out.println("Outgoing order JSON: " + json);
 
         Task<String> task = ApiClient.postJson(
                 "http://localhost:8080/api/order",
@@ -75,9 +79,40 @@ public class CartController {
         );
 
         task.setOnSucceeded(e -> {
+            String body = task.getValue();
+
+            Type type = new TypeToken<ApiResponse<OrderResponse>>(){}.getType();
+            ApiResponse<OrderResponse> response = gson.fromJson(body, type);
+
+            if (!response.isSuccess()) {
+                showAlert("Order Failed", response.getMessage());
+                return;
+            }
+
+            OrderResponse order = response.getData();
+
+            StringBuilder bill = new StringBuilder();
+            bill.append("ORDER RECEIPT\n");
+            bill.append("----------------------------------------\n");
+            bill.append("Order ID: ").append(order.getOrderId()).append("\n\n");
+
+            bill.append("Items:\n");
+
+            for (var item : order.getOrderItems()) {
+                bill.append(" - ").append(item.getTitle())
+                    .append(" by ").append(item.getAuthor())
+                    .append("\n   Type: ").append(item.getPurchaseType())
+                    .append("\n   Price: $").append(item.getPrice().setScale(2))
+                    .append("\n\n");
+            }
+
+            bill.append("----------------------------------------\n");
+            bill.append("Total: $").append(order.getTotalPrice().setScale(2)).append("\n");
+
+            showBillWindow(bill.toString());
+
             CartService.clear();
             refreshTable();
-            showAlert("Success", "Order placed successfully!");
             closeWindow();
         });
 
@@ -100,5 +135,18 @@ public class CartController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
+    }
+
+    private void showBillWindow(String billText) {
+        TextArea area = new TextArea(billText);
+        area.setEditable(false);
+        area.setWrapText(true);
+
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle("Order Receipt");
+        dialog.setHeaderText("Please check your email for a detailed receipt");
+        dialog.getDialogPane().setContent(area);
+        dialog.setResizable(true);
+        dialog.showAndWait();
     }
 }
