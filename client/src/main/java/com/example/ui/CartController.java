@@ -144,7 +144,7 @@ public class CartController {
 
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle("Order Receipt");
-        dialog.setHeaderText("Please check your email for a detailed receipt");
+        dialog.setHeaderText("Order Successful! Please check your email for a detailed receipt");
         dialog.getDialogPane().setContent(area);
         dialog.setResizable(true);
         dialog.showAndWait();

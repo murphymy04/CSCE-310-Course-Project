@@ -24,6 +24,7 @@
                         text="Search"
                         prefWidth="120"/>
                 <Button text="Open Cart" onAction="#openCart" />
+                <Button fx:id="logoutButton" text="Logout" onAction="#logout"/>
             </children>
         </HBox>
     </top>

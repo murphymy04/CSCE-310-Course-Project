@@ -1,6 +1,8 @@
 package com.example.ui;
 
 import com.example.ApiClient;
+import com.example.MainApp;
+import com.example.UserSession;
 import com.example.types.ApiResponse;
 import com.example.types.Book;
 import com.google.gson.Gson;
@@ -43,6 +45,7 @@ public class SearchController {
         buyPriceColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("buyPrice"));
         rentedColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("rented"));
 
+        searchButton.setDefaultButton(true);
         searchButton.setOnAction(e -> searchBooks());
         resultsTable.setRowFactory(tv -> {
             TableRow<Book> row = new TableRow<>();
@@ -133,6 +136,19 @@ public class SearchController {
             stage.show();
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void logout() {
+        UserSession.token = null;
+        UserSession.isManager = false;
+        try {
+            Stage stage = (Stage) searchField.getScene().getWindow();
+            stage.setScene(new Scene(MainApp.loadFXML("login.fxml")));
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

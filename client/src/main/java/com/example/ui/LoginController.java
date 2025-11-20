@@ -19,8 +19,14 @@ public class LoginController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
+    @FXML private Button loginButton;
 
     private final Gson gson = new Gson();
+
+    @FXML
+    public void initialize() {
+        loginButton.setDefaultButton(true);
+    }
 
     @FXML
     private void login() {
@@ -81,4 +87,3 @@ public class LoginController {
         }
     }
 }
-

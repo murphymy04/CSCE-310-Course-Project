@@ -67,6 +67,5 @@ public class AuthController {
                 new ApiResponse<>(false, e.getMessage(), null)
             );
         }
-
     }
 }

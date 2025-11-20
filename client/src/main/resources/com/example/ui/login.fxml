@@ -28,7 +28,8 @@
             <PasswordField fx:id="passwordField" promptText="Enter password" />
         </VBox>
 
-        <Button text="Login"
+        <Button fx:id="loginButton"
+                text="Login"
                 prefWidth="200"
                 onAction="#login"
                 style="-fx-font-size: 16px;" />
