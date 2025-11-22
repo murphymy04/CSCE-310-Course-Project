@@ -29,6 +29,11 @@ public class AuthController {
                 new ApiResponse<>(false, "Username or email already registered", null)
             );
         }
+        if (user.getUsername() == "" || user.getEmail() == "" || user.getPasswordHash() == "") {
+            return ResponseEntity.badRequest().body(
+                new ApiResponse<>(false, "No field can be blank.", null)
+            );
+        }
         try {
             User registeredUser = userService.registerUser(user);
             return ResponseEntity.ok(

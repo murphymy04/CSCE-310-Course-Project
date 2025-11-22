@@ -1,8 +1,14 @@
 package com.example.ui;
 
+import java.lang.reflect.Type;
+
 import com.example.ApiClient;
+import com.example.types.ApiResponse;
+import com.example.types.AuthResponse;
 import com.example.types.RegisterRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -16,8 +22,14 @@ public class RegisterController {
     @FXML private PasswordField passwordField;
     @FXML private CheckBox managerCheckBox;
     @FXML private Label errorLabel;
+    @FXML private Button registerButton;
 
     private final Gson gson = new Gson();
+
+    @FXML
+    public void initialize() {
+        registerButton.setDefaultButton(true);
+    }
 
     @FXML
     private void register() {
@@ -36,8 +48,11 @@ public class RegisterController {
         task.setOnSucceeded(e -> {
             String body = task.getValue();
 
-            if (body == null) {
-                errorLabel.setText("Registration failed.");
+            Type type = new TypeToken<ApiResponse<AuthResponse>>(){}.getType();
+            ApiResponse<AuthResponse> response = gson.fromJson(body, type);
+
+            if (!response.isSuccess()) {
+                errorLabel.setText(response.getMessage());
                 return;
             }
 

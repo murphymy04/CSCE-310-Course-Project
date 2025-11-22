@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.ui.ManagerOrdersController">
+
+    <top>
+        <Label text="All Orders"
+               style="-fx-font-size: 20px; -fx-padding: 10;"/>
+    </top>
+
+    <center>
+        <TableView fx:id="ordersTable">
+
+            <columns>
+                <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="80"/>
+                <TableColumn fx:id="usernameColumn" text="Username" prefWidth="140"/>
+                <TableColumn fx:id="totalPriceColumn" text="Total Price" prefWidth="120"/>
+                <TableColumn fx:id="paidColumn" text="Paid" prefWidth="80"/>
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

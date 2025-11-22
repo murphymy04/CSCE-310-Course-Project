@@ -68,7 +68,7 @@ public class LoginController {
             Stage stage = (Stage) usernameField.getScene().getWindow();
 
             if (isManager) {
-                stage.setScene(new Scene(new ManagerDashboard()));
+                stage.setScene(new Scene(com.example.MainApp.loadFXML("manager_order_view.fxml")));
             } else {
                 stage.setScene(new Scene(com.example.MainApp.loadFXML("search.fxml")));
             }
