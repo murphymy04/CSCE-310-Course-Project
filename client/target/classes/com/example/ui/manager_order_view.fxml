@@ -8,21 +8,17 @@
             fx:controller="com.example.ui.ManagerOrdersController">
 
     <top>
-        <Label text="All Orders"
-               style="-fx-font-size: 20px; -fx-padding: 10;"/>
+        <HBox spacing="10" style="-fx-padding: 10;">
+            <children>
+                <Label text="All Orders" style="-fx-font-size: 20px;"/>
+                <Button fx:id="paidButton" text="Mark Selected Paid" onAction="#markSelectedPaid"/>
+                <Button fx:id="logoutButton" text="Logout" onAction="#logout"/>
+            </children>
+        </HBox>
     </top>
 
     <center>
-        <TableView fx:id="ordersTable">
-
-            <columns>
-                <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="80"/>
-                <TableColumn fx:id="usernameColumn" text="Username" prefWidth="140"/>
-                <TableColumn fx:id="totalPriceColumn" text="Total Price" prefWidth="120"/>
-                <TableColumn fx:id="paidColumn" text="Paid" prefWidth="80"/>
-            </columns>
-
-        </TableView>
+        <TableView fx:id="ordersTable"/>
     </center>
 
 </BorderPane>
