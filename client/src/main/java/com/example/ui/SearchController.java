@@ -59,6 +59,28 @@ public class SearchController {
 
             return row;
         });
+
+        loadBooks();
+    }
+
+    private void loadBooks() {
+        Task<String> task = ApiClient.get("http://localhost:8080/api/books");
+
+        task.setOnSucceeded(e -> {
+            String body = task.getValue();
+
+            Type type = new TypeToken<ApiResponse<List<Book>>>() {}.getType();
+            ApiResponse<List<Book>> response = gson.fromJson(body, type);
+
+            List<Book> books = response.getData();
+            resultsTable.setItems(FXCollections.observableList(books));
+        });
+
+        task.setOnFailed(e -> {
+            showAlert("Request error: " + task.getException().getMessage());
+        });
+
+        new Thread(task).start();
     }
 
     private void searchBooks() {
@@ -73,7 +95,7 @@ public class SearchController {
             String encoded = java.net.URLEncoder.encode(keyword, java.nio.charset.StandardCharsets.UTF_8);
             String url = "http://localhost:8080/api/books/search?keyword=" + encoded;
 
-                    Task<String> task = ApiClient.get(url);
+            Task<String> task = ApiClient.get(url);
 
             task.setOnSucceeded(e -> {
                 String body = task.getValue();

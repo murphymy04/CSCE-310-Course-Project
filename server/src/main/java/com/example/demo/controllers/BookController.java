@@ -14,6 +14,14 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
+    @GetMapping()
+    public ResponseEntity<ApiResponse<List<Book>>> getBooks() {
+        List<Book> results = bookService.getAllBooks();
+        return ResponseEntity.ok(
+            new ApiResponse<>(true, "All books found", results)
+        );
+    }
+
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<Book>>> search(@RequestParam String keyword) {
         List<Book> results = bookService.search(keyword);

@@ -35,6 +35,7 @@ public class ManagerOrdersController {
     @FXML private TableView<ManageOrder> ordersTable;
     @FXML private Button logoutButton;
     @FXML private Button paidButton;
+    @FXML private Button bookButton;
 
     @FXML private TableColumn<ManageOrder, Number> orderIdColumn;
     @FXML private TableColumn<ManageOrder, String> usernameColumn;
@@ -176,6 +177,11 @@ public class ManagerOrdersController {
 
     private void showError(String msg) {
         new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK).show();
+    }
+
+    @FXML
+    private void redirectBookView() {
+        
     }
 
     @FXML

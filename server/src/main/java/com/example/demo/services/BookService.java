@@ -11,6 +11,10 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
     public List<Book> search(String keyword) {
         return bookRepository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCase(keyword, keyword);
     }
