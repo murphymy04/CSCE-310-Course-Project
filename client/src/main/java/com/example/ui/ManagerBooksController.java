@@ -1,5 +1,9 @@
 package com.example.ui;
 
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.List;
+
 import com.example.ApiClient;
 import com.example.MainApp;
 import com.example.UserSession;
@@ -18,16 +22,9 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.List;
-
-public class SearchController {
-
-    @FXML private TextField searchField;
-    @FXML private Button searchButton;
+public class ManagerBooksController {
+    
     @FXML private TableView<Book> resultsTable;
-
     @FXML private TableColumn<Book, String> titleColumn;
     @FXML private TableColumn<Book, String> authorColumn;
     @FXML private TableColumn<Book, BigDecimal> rentPriceColumn;
@@ -38,15 +35,12 @@ public class SearchController {
 
     @FXML
     public void initialize() {
-        // Bind columns to POJO getters (must match field names)
         titleColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("author"));
         rentPriceColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("rentPrice"));
         buyPriceColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("buyPrice"));
         rentedColumn.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("rented"));
 
-        searchButton.setDefaultButton(true);
-        searchButton.setOnAction(e -> searchBooks());
         resultsTable.setRowFactory(tv -> {
             TableRow<Book> row = new TableRow<>();
 
@@ -64,7 +58,7 @@ public class SearchController {
     }
 
     private void loadBooks() {
-        Task<String> task = ApiClient.get("http://localhost:8080/api/books");
+        Task<String> task = ApiClient.get("http://localhost:8080/api/books/manager/fetch");
 
         task.setOnSucceeded(e -> {
             String body = task.getValue();
@@ -83,62 +77,26 @@ public class SearchController {
         new Thread(task).start();
     }
 
-    private void searchBooks() {
-        String keyword = searchField.getText().trim();
-
-        if (keyword.isEmpty()) {
-            showAlert("Please enter a search keyword.");
-            return;
-        }
-
-        try {
-            String encoded = java.net.URLEncoder.encode(keyword, java.nio.charset.StandardCharsets.UTF_8);
-            String url = "http://localhost:8080/api/books/search?keyword=" + encoded;
-
-            Task<String> task = ApiClient.get(url);
-
-            task.setOnSucceeded(e -> {
-                String body = task.getValue();
-
-                Type type = new TypeToken<ApiResponse<List<Book>>>() {}.getType();
-                ApiResponse<List<Book>> response = gson.fromJson(body, type);
-
-                if (!response.isSuccess()) {
-                    showAlert("Search failed: " + response.getMessage());
-                    return;
-                }
-
-                List<Book> books = response.getData();
-                resultsTable.setItems(FXCollections.observableList(books));
-            });
-
-            task.setOnFailed(e -> {
-                showAlert("Request error: " + task.getException().getMessage());
-            });
-
-            new Thread(task).start();
-        }
-        catch (Exception e) {
-            showAlert("Encoding error: " + e.getMessage());
-        }
+    public void refreshBooks() {
+        loadBooks();
     }
 
     private void openBookDetail(Book book) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/example/ui/book_modal.fxml")
+                getClass().getResource("/com/example/ui/manager_book_modal.fxml")
             );
 
             Parent root = loader.load();
 
-            BookModalController controller = loader.getController();
+            ManagerBookModalController controller = loader.getController();
             controller.setBook(book);
-            controller.setOnSaveCallback(() -> loadBooks());
+            controller.setOnSaveCallback(() -> refreshBooks());
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Book Options");
+            stage.setTitle("Update Book");
             stage.showAndWait(); // modal
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -147,21 +105,35 @@ public class SearchController {
     }
 
     @FXML
-    private void openCart() {
+    private void addBook() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/ui/cart-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/example/ui/manager_add_book_modal.fxml")
+            );
+
             Parent root = loader.load();
 
-            CartController controller = loader.getController();
-            controller.setOnSaveCallback(() -> loadBooks());
+            ManagerAddBookModalController controller = loader.getController();
+            controller.setOnSaveCallback(() -> refreshBooks());
 
             Stage stage = new Stage();
-            stage.setTitle("Shopping Cart");
-            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setScene(new Scene(root));
-            stage.show();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Add Book");
+            stage.showAndWait(); // modal       
+        }
+        catch (Exception e) {
+            e.printStackTrace();;
+        }
+    }
 
-        } catch (Exception e) {
+    @FXML
+    private void redirectOrdersView() {
+        try {
+            Stage stage = (Stage) resultsTable.getScene().getWindow();
+            stage.setScene(new Scene(MainApp.loadFXML("manager_order_view.fxml")));
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -171,7 +143,7 @@ public class SearchController {
         UserSession.token = null;
         UserSession.isManager = false;
         try {
-            Stage stage = (Stage) searchField.getScene().getWindow();
+            Stage stage = (Stage) resultsTable.getScene().getWindow();
             stage.setScene(new Scene(MainApp.loadFXML("login.fxml")));
         }
         catch (Exception e) {

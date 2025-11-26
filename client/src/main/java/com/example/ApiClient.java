@@ -57,4 +57,29 @@ public class ApiClient {
             }
         };
     }
+
+    public static Task<String> deleteJson(String url, String jsonBody) {
+        return new Task<>() {
+            @Override
+            protected String call() throws Exception {
+
+                HttpRequest.Builder builder = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Content-Type", "application/json");
+
+                if (UserSession.token != null && !UserSession.token.isBlank()) {
+                    builder.header("Authorization", "Bearer " + UserSession.token);
+                }
+
+                HttpRequest request = builder
+                        .method("DELETE", HttpRequest.BodyPublishers.ofString(jsonBody))
+                        .build();
+
+                HttpResponse<String> response =
+                        http.send(request, HttpResponse.BodyHandlers.ofString());
+
+                return response.body();
+            }
+        };
+    }
 }

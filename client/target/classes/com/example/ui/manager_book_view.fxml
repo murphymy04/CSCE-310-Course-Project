@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.ui.ManagerBooksController">
+
+    <!-- Top search bar -->
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
+            <children>
+                <Label text="Book Inventory" style="-fx-font-size: 20px;"/>
+                <Button fx:id="ordersButton" text="Order history" onAction="#redirectOrdersView" />
+                <Button fx:id="addBook" text="Add Book" onAction="#addBook" />
+                <Button fx:id="logoutButton" text="Logout" onAction="#logout"/>
+            </children>
+        </HBox>
+    </top>
+
+    <!-- Table displaying book results -->
+    <center>
+        <TableView fx:id="resultsTable">
+
+            <columns>
+
+                <TableColumn fx:id="titleColumn"
+                             text="Title"
+                             prefWidth="200"/>
+
+                <TableColumn fx:id="authorColumn"
+                             text="Author"
+                             prefWidth="160"/>
+
+                <TableColumn fx:id="rentPriceColumn"
+                             text="Rent Price"
+                             prefWidth="120"/>
+
+                <TableColumn fx:id="buyPriceColumn"
+                             text="Buy Price"
+                             prefWidth="120"/>
+
+                <TableColumn fx:id="rentedColumn"
+                             text="Rented?"
+                             prefWidth="90"/>
+
+            </columns>
+
+        </TableView>
+    </center>
+
+</BorderPane>

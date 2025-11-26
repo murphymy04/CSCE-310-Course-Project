@@ -181,7 +181,13 @@ public class ManagerOrdersController {
 
     @FXML
     private void redirectBookView() {
-        
+        try {
+            Stage stage = (Stage) ordersTable.getScene().getWindow();
+            stage.setScene(new Scene(MainApp.loadFXML("manager_book_view.fxml")));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

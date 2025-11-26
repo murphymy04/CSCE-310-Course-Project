@@ -19,6 +19,7 @@ public class BookModalController {
     @FXML private Label rentedStatusLabel;
 
     private Book book;
+    private Runnable onSaveCallback;
 
     public void setBook(Book book) {
         this.book = book;
@@ -56,6 +57,13 @@ public class BookModalController {
 
     @FXML
     private void closeModal() {
+        if (onSaveCallback != null) {
+            onSaveCallback.run();
+        }
         ((Stage) titleLabel.getScene().getWindow()).close();
+    }
+
+    public void setOnSaveCallback(Runnable callback) {
+        this.onSaveCallback = callback;
     }
 }

@@ -30,6 +30,7 @@ public class CartController {
     @FXML private TableColumn<CartItem, String> priceCol;
 
     private final Gson gson = new Gson();
+    private Runnable onSaveCallback;
 
     @FXML
     public void initialize() {
@@ -113,6 +114,9 @@ public class CartController {
 
             CartService.clear();
             refreshTable();
+            if (onSaveCallback != null) {
+                onSaveCallback.run();
+            }
             closeWindow();
         });
 
@@ -148,5 +152,9 @@ public class CartController {
         dialog.getDialogPane().setContent(area);
         dialog.setResizable(true);
         dialog.showAndWait();
+    }
+
+    public void setOnSaveCallback(Runnable callback) {
+        this.onSaveCallback = callback;
     }
 }

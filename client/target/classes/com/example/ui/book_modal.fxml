@@ -26,7 +26,7 @@
         <Button fx:id="rentButton" text="Rent" prefWidth="100"/>
         <Button fx:id="buyButton" text="Buy" prefWidth="100"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="cancelButton" text="Cancel" prefWidth="100"/>
+        <Button fx:id="cancelButton" text="Cancel" prefWidth="100" onAction="#closeModal"/>
     </HBox>
 
 </VBox>

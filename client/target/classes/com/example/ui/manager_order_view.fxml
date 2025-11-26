@@ -10,7 +10,7 @@
     <top>
         <HBox spacing="10" style="-fx-padding: 10;">
             <children>
-                <Label text="All Orders" style="-fx-font-size: 20px;"/>
+                <Label text="Order History" style="-fx-font-size: 20px;"/>
                 <Button fx:id="paidButton" text="Mark Selected Paid" onAction="#markSelectedPaid"/>
                 <Button fx:id="bookButton" text="Book Inventory" onAction="#redirectBookView" />
                 <Button fx:id="logoutButton" text="Logout" onAction="#logout"/>
