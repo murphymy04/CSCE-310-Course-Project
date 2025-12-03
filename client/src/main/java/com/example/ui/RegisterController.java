@@ -48,8 +48,8 @@ public class RegisterController {
         task.setOnSucceeded(e -> {
             String body = task.getValue();
 
-            Type type = new TypeToken<ApiResponse<AuthResponse>>(){}.getType();
-            ApiResponse<AuthResponse> response = gson.fromJson(body, type);
+            Type type = new TypeToken<ApiResponse<String>>(){}.getType();
+            ApiResponse<String> response = gson.fromJson(body, type);
 
             if (!response.isSuccess()) {
                 errorLabel.setText(response.getMessage());
